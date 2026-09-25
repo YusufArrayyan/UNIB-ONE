@@ -1,0 +1,36 @@
+{
+  "summary": "First-run testing of UNIB ONE app. Created pytest suite at /app/backend/tests/backend_test.py covering auth, public endpoints, RBAC, availability/conflicts, external request wizard workflow (request->review->approved->confirmed w/ slot lock), anti double-booking with internal blocks, admin stats and content CRUD. All 26 backend tests passed. Frontend smoke tested: Home, Explore (search+filter), Facility detail (calendar, WhatsApp CTA), Request wizard (4 steps), UNIB Map page, Admin login (BPU) -> Dashboard render with KPIs, chart, recent requests. Data-testids present as documented.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/auth/login", "issue": "Also accepts cookie 'access_token' as fallback but login endpoint doesn't set it. Not a bug - frontend uses Bearer as designed."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {"flow": "Google Maps (UNIB Map page + Facility detail map)", "issue": "Google Maps JS API returns BillingNotEnabledMapError; overlay 'This page can't load Google Maps correctly.' appears on top of the map. Markers still render but map tiles show 'For development purposes only' watermark. Not a code bug - the API key REACT_APP_GOOGLE_MAPS_API_KEY in frontend/.env does not have Billing enabled in Google Cloud Console.", "affected_selectors": ["[data-testid='map']"]}
+    ],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/backend/tests/backend_test.py", "/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": [
+    "Enable Billing on the Google Cloud project associated with REACT_APP_GOOGLE_MAPS_API_KEY OR restrict the key correctly so Maps JS loads on the production URL. Currently the map shows an overlay error to end users.",
+    "NOTE: The review_request referred to seeded slug 'unib-venue' but actual seeded slugs are e.g. 'gedung-serba-guna-gsg-unib', 'aula-fmipa-unib', etc. Tests were updated accordingly. If a canonical 'unib-venue' slug is desired, update seed_data.py."
+  ],
+  "critical_code_review_comments": [
+    "server.py: request_id generation uses `count_documents({}) + 1` which is race-prone under concurrent POSTs; consider atomic $inc counter or uuid to guarantee uniqueness (currently no unique index on request_id).",
+    "server.py delete_availability soft-cancels (status='cancelled') which is good, but delete_facility hard-deletes without checking active availability/requests referencing it — could orphan bookings.",
+    "server.py update_facility uses full-body replace (model_dump()) which forces client to send full object; PATCH-style semantics would be safer.",
+    "server.py CORS uses allow_credentials=True with allow_origins='*' (from CORS_ORIGINS env). Modern browsers reject wildcard + credentials. Since frontend uses Bearer (not cookies) it's fine, but should tighten to explicit origin or drop allow_credentials.",
+    "get_current_user still reads cookie fallback but login never sets a cookie — dead code path.",
+    "seed_data: passwords for bpu/internal are hard-coded and only inserted if user missing; if admin changes password from UI, seeder won't overwrite (this is actually desired)."
+  ],
+  "updated_files": ["/app/backend/tests/backend_test.py"],
+  "success_rate": {"backend": "100% (26/26)", "frontend": "smoke pass - all key flows load and render"},
+  "test_credentials": "See /app/memory/test_credentials.md - all three roles verified working via /api/auth/login",
+  "seed_data_creation": "No seed data added; used existing seeded facilities/users. Test data created during runs uses TEST_* prefix and is cleaned up in fixtures.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend suite is stable and can be rerun with: pytest /app/backend/tests/backend_test.py -v. Google Maps billing error is the only significant frontend integration issue observed. Frontend admin panel loads properly for admin_bpu with sidebar (Dashboard, Fasilitas, External Requests, Content & Stories, Internal & Block Schedule, Kalender Fasilitas). Have NOT deeply exercised admin CRUD flows via UI, nor Compare/Track pages, nor completing the 4-step wizard submission end-to-end via UI - those can be added if needed."
+}
