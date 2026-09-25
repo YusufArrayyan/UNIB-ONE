@@ -1,0 +1,221 @@
+{
+  "project_name": "UNIB ONE",
+  "tagline": "Lebih dari Sekadar Fasilitas. Kampusmu, Terhubung.",
+  "tagline_en": "More Than Facilities. It's Your Campus, Connected.",
+  "target_audience": "Civitas Akademika Universitas Bengkulu (Mahasiswa, Dosen, Staf), Organisasi Kemahasiswaan (UKM/BEM), Publik/Eksternal",
+  "app_type": "hybrid_fullstack",
+  "theme_strategy": {
+    "default_mode": "light",
+    "supported_modes": ["light", "dark"],
+    "hero_and_sidebar_theme": "dark_navy",
+    "content_canvas_theme": "clean_light"
+  },
+  "typography": {
+    "heading_font": "Plus Jakarta Sans, sans-serif",
+    "body_font": "Inter, sans-serif",
+    "mono_font": "JetBrains Mono, monospace",
+    "font_family_imports": "@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');",
+    "scale": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight",
+      "h3": "text-xl sm:text-2xl font-semibold tracking-normal",
+      "h4": "text-lg sm:text-xl font-semibold",
+      "subtitle": "text-base sm:text-lg font-medium text-muted-foreground leading-relaxed",
+      "body": "text-sm sm:text-base leading-relaxed text-slate-700 dark:text-slate-300",
+      "caption": "text-xs sm:text-sm font-medium tracking-wide text-slate-500 uppercase"
+    }
+  },
+  "colors": {
+    "navy_primary": {
+      "50": "#F0F4F8",
+      "100": "#D9E2EC",
+      "500": "#1E293B",
+      "800": "#0F172A",
+      "900": "#0B132B",
+      "description": "Deep Navy Blue used for Top Navigation, Hero section background, Admin Sidebar, and primary structural panels."
+    },
+    "gold_accent": {
+      "400": "#FACC15",
+      "500": "#F59E0B",
+      "600": "#D97706",
+      "description": "Gold / Vibrant Amber used for Primary CTA buttons, key badges, highlighting statistics, and interactive callouts."
+    },
+    "sky_info": {
+      "100": "#E0F2FE",
+      "500": "#0284C7",
+      "700": "#0369A1",
+      "description": "Light Blue / Sky used for informative chips, location pills, and soft highlight backgrounds."
+    },
+    "status_matrix": {
+      "available": {
+        "bg": "#ECFDF5",
+        "text": "#047857",
+        "border": "#A7F3D0",
+        "dot": "#10B981",
+        "label": "Tersedia"
+      },
+      "in_use": {
+        "bg": "#FFFBEB",
+        "text": "#B45309",
+        "border": "#FDE68A",
+        "dot": "#F59E0B",
+        "label": "Dalam Penggunaan / Terbooking"
+      },
+      "internal_only": {
+        "bg": "#EEF2FF",
+        "text": "#4338CA",
+        "border": "#C7D2FE",
+        "dot": "#6366F1",
+        "label": "Jadwal Internal"
+      },
+      "maintenance": {
+        "bg": "#FEF2F2",
+        "text": "#B91C1C",
+        "border": "#FECACA",
+        "dot": "#EF4444",
+        "label": "Perbaikan / Pemeliharaan"
+      }
+    },
+    "css_variables": {
+      "light": {
+        "--background": "210 40% 98%",
+        "--foreground": "222 47% 11%",
+        "--card": "0 0% 100%",
+        "--card-foreground": "222 47% 11%",
+        "--popover": "0 0% 100%",
+        "--popover-foreground": "222 47% 11%",
+        "--primary": "222 47% 11%",
+        "--primary-foreground": "0 0% 100%",
+        "--secondary": "210 40% 96.1%",
+        "--secondary-foreground": "222 47% 11%",
+        "--accent": "38 92% 50%",
+        "--accent-foreground": "222 47% 11%",
+        "--muted": "210 40% 96.1%",
+        "--muted-foreground": "215 16% 47%",
+        "--border": "214.3 31.8% 91.4%",
+        "--input": "214.3 31.8% 91.4%",
+        "--ring": "38 92% 50%",
+        "--radius": "0.5rem"
+      },
+      "dark": {
+        "--background": "222 47% 11%",
+        "--foreground": "210 40% 98%",
+        "--card": "222 47% 14%",
+        "--card-foreground": "210 40% 98%",
+        "--popover": "222 47% 14%",
+        "--popover-foreground": "210 40% 98%",
+        "--primary": "38 92% 50%",
+        "--primary-foreground": "222 47% 11%",
+        "--secondary": "217 33% 17%",
+        "--secondary-foreground": "210 40% 98%",
+        "--accent": "38 92% 50%",
+        "--accent-foreground": "222 47% 11%",
+        "--muted": "217 33% 17%",
+        "--muted-foreground": "215 20.2% 65.1%",
+        "--border": "217 33% 20%",
+        "--input": "217 33% 20%",
+        "--ring": "38 92% 50%"
+      }
+    }
+  },
+  "layout_and_spacing": {
+    "container_max_width": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+    "section_spacing": "py-12 md:py-20",
+    "grid_gap": "gap-6 md:gap-8",
+    "card_padding": "p-5 sm:p-6",
+    "border_radius": "rounded-xl for cards, rounded-lg for buttons/inputs, rounded-full for badges/chips",
+    "shadows": {
+      "subtle": "shadow-sm hover:shadow-md transition-shadow duration-200",
+      "card": "shadow-[0_4px_20px_-4px_rgba(15,23,42,0.06)] hover:shadow-[0_12px_30px_-6px_rgba(15,23,42,0.12)] transition-all duration-300",
+      "floating_panel": "shadow-2xl border border-slate-200/80 dark:border-slate-800"
+    }
+  },
+  "component_styling": {
+    "header_nav": {
+      "background": "bg-slate-900/95 backdrop-blur-md text-white border-b border-slate-800 sticky top-0 z-50",
+      "brand_logo": "Flex items-center gap-3, UNIB ONE logo with Gold Icon & crisp bold typography",
+      "nav_links": "Text-slate-300 hover:text-amber-400 font-medium text-sm transition-colors",
+      "action_buttons": "Gold CTA 'Ajukan Peminjaman' (bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold px-4 py-2 rounded-lg)"
+    },
+    "hero_banner": {
+      "background": "bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 text-white relative overflow-hidden py-16 lg:py-24",
+      "overlay": "Absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-500/10 via-slate-900/60 to-slate-950",
+      "search_box": "Glassmorphism card (bg-white/10 backdrop-blur-lg border border-white/20 p-4 sm:p-6 rounded-2xl max-w-4xl mx-auto shadow-2xl)"
+    },
+    "facility_card": {
+      "container": "group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between shadow-sm hover:shadow-xl",
+      "image_wrapper": "relative aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-800",
+      "badge_category": "absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-semibold px-3 py-1 rounded-full border border-white/10",
+      "badge_status": "absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border backdrop-blur-md shadow-sm",
+      "content": "p-5 flex-1 flex flex-col justify-between space-y-4",
+      "specs": "flex items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-3"
+    },
+    "availability_calendar": {
+      "legend": "Flex items-center gap-4 text-xs font-medium py-3 border-b border-slate-200 dark:border-slate-800",
+      "day_tile": "h-12 rounded-lg border flex flex-col items-center justify-center cursor-pointer transition-all hover:scale-105 relative group",
+      "states": {
+        "available": "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100",
+        "internal": "bg-indigo-50 dark:bg-indigo-950/40 border-indigo-200 text-indigo-800 dark:text-indigo-300 hover:bg-indigo-100",
+        "external": "bg-amber-50 dark:bg-amber-950/40 border-amber-200 text-amber-800 dark:text-amber-300 hover:bg-amber-100",
+        "maintenance": "bg-rose-50 dark:bg-rose-950/40 border-rose-200 text-rose-800 dark:text-rose-300 hover:bg-rose-100"
+      }
+    },
+    "wizard_stepper": {
+      "container": "flex items-center justify-between max-w-3xl mx-auto mb-8 relative",
+      "step_circle": "w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 z-10",
+      "active_step": "bg-amber-500 text-slate-950 ring-4 ring-amber-500/20 shadow-lg scale-110",
+      "completed_step": "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-950",
+      "upcoming_step": "bg-slate-100 dark:bg-slate-800 text-slate-400 border border-slate-200 dark:border-slate-700",
+      "connector": "absolute top-5 left-0 right-0 h-0.5 bg-slate-200 dark:bg-slate-800 -z-0"
+    },
+    "admin_dashboard": {
+      "sidebar": "w-64 bg-slate-900 text-slate-300 flex flex-col h-screen fixed left-0 top-0 border-r border-slate-800 z-40",
+      "kpi_card": "bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between",
+      "data_table": "w-full border-collapse text-sm text-left border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden"
+    }
+  },
+  "interactive_map_guidelines": {
+    "library": "Leaflet / Google Maps API",
+    "custom_markers": "Colored pin icons with category badges (Gedung = Gold, Lab = Indigo, Olahraga = Emerald, Aula = Rose)",
+    "floating_sidebar": "Filter by zone, purpose, and instant availability on map view",
+    "marker_preview_card": "Bottom floating card when pin clicked showing facility thumbnail, title, capacity, and 'Detail Fasilitas' button"
+  },
+  "image_urls": {
+    "hero_background": "https://images.unsplash.com/photo-1562774053-701939374585?w=1920&h=1080&fit=crop&auto=format",
+    "auditorium": "https://images.pexels.com/photos/36834057/pexels-photo-36834057.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "lecture_hall": "https://images.pexels.com/photos/19253500/pexels-photo-19253500.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "campus_building_exterior": "https://images.unsplash.com/photo-1759299615947-bc798076b479?crop=entropy&cs=srgb&fm=jpg&w=800&q=85",
+    "campus_plaza": "https://images.unsplash.com/photo-1769209435699-9cc1fd8e7f57?crop=entropy&cs=srgb&fm=jpg&w=800&q=85",
+    "campus_lake": "https://images.unsplash.com/photo-1784001727397-1038beb23bca?crop=entropy&cs=srgb&fm=jpg&w=800&q=85",
+    "campus_greenery": "https://images.unsplash.com/photo-1781032161857-41214c66559f?crop=entropy&cs=srgb&fm=jpg&w=800&q=85",
+    "lab_research": "https://images.unsplash.com/photo-1766297247924-6638d54e7c89?crop=entropy&cs=srgb&fm=jpg&w=800&q=85",
+    "computer_lab": "https://images.pexels.com/photos/8851456/pexels-photo-8851456.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "lab_scientists": "https://images.pexels.com/photos/8851447/pexels-photo-8851447.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "event_hall": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&h=400&fit=crop&auto=format",
+    "sports_court": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&h=400&fit=crop&auto=format",
+    "academic_study": "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&h=400&fit=crop&auto=format",
+    "organization_meeting": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=400&fit=crop&auto=format",
+    "library": "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&h=520&fit=crop&auto=format",
+    "map_preview": "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=900&h=620&fit=crop&auto=format"
+  },
+  "motion_and_animations": {
+    "page_transitions": "Framer motion page fade & slight slide-up (opacity: [0, 1], y: [12, 0])",
+    "card_hover": "Hover scale 1.02 with shadow elevation and smooth 250ms ease-out cubic bezier",
+    "stepper_progress": "Smooth width transition on progress line with spring animation on active circle",
+    "toast_notifications": "Sonner toasts sliding from top-right corner with status icons"
+  },
+  "accessibility_and_testing": {
+    "data_testid_convention": "kebab-case, role-based identifiers on all buttons, links, inputs, tables, calendar cells, and modal triggers",
+    "contrast_ratio": "Minimum 4.5:1 for standard text, 3:1 for large display headers and status chips",
+    "focus_states": "ring-2 ring-amber-500 ring-offset-2 focus:outline-none"
+  },
+  "instructions_to_main_agent": [
+    "Always build UI components in Javascript (.js / .jsx) as configured in the frontend.",
+    "Use dark navy blue (#0F172A) for navigation headers, hero backdrop, and admin sidebar.",
+    "Use warm gold/amber (#F59E0B) for primary actions, prominent CTAs, and key stats highlights.",
+    "Keep content card canvas clean and light with subtle borders (border-slate-200 / border-slate-800).",
+    "Ensure every interactive component has a data-testid attribute.",
+    "Use Sonner for toast notifications on form submission and WhatsApp redirects.",
+    "Render availability calendar with clear status indicators for Available, Internal Schedule, External Booking, and Maintenance."
+  ]
+}
