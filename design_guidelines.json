@@ -1,5 +1,5 @@
 {
-  "project_name": "UNIB ONE",
+  "project_name": "BPU UNIB",
   "tagline": "Lebih dari Sekadar Fasilitas. Kampusmu, Terhubung.",
   "tagline_en": "More Than Facilities. It's Your Campus, Connected.",
   "target_audience": "Civitas Akademika Universitas Bengkulu (Mahasiswa, Dosen, Staf), Organisasi Kemahasiswaan (UKM/BEM), Publik/Eksternal",
@@ -133,7 +133,7 @@
   "component_styling": {
     "header_nav": {
       "background": "bg-slate-900/95 backdrop-blur-md text-white border-b border-slate-800 sticky top-0 z-50",
-      "brand_logo": "Flex items-center gap-3, UNIB ONE logo with Gold Icon & crisp bold typography",
+      "brand_logo": "Flex items-center gap-3, BPU UNIB logo (/logo.png on white badge) & crisp bold typography",
       "nav_links": "Text-slate-300 hover:text-amber-400 font-medium text-sm transition-colors",
       "action_buttons": "Gold CTA 'Ajukan Peminjaman' (bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold px-4 py-2 rounded-lg)"
     },

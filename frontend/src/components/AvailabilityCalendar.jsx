@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const DAYS = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
@@ -15,6 +15,12 @@ function ymd(y, m, d) {
 export function AvailabilityCalendar({ events = [], onSelectDate, selectedDate, publicView = true }) {
   const now = new Date();
   const [cursor, setCursor] = useState({ y: now.getFullYear(), m: now.getMonth() });
+
+  useEffect(() => {
+    if (!selectedDate) return;
+    const [y, m] = selectedDate.split("-").map(Number);
+    if (y && m) setCursor({ y, m: m - 1 });
+  }, [selectedDate]);
 
   const dayMap = useMemo(() => {
     const map = {};
@@ -43,7 +49,8 @@ export function AvailabilityCalendar({ events = [], onSelectDate, selectedDate, 
     const evs = dayMap[dstr];
     if (!evs || evs.length === 0) return "available";
     if (evs.some((e) => e.source === "maintenance")) return "maintenance";
-    if (publicView) return "unavailable";
+    // Publik: hari dengan jadwal tetap bisa dipilih; ketersediaan dicek per jam.
+    if (publicView) return "partial";
     if (evs.some((e) => e.source === "external")) return "external";
     return "internal";
   };
@@ -51,6 +58,7 @@ export function AvailabilityCalendar({ events = [], onSelectDate, selectedDate, 
   const STATE_CLS = {
     available: "bg-emerald-50 border-emerald-200 text-emerald-800 hover:bg-emerald-100",
     unavailable: "bg-amber-50 border-amber-200 text-amber-800",
+    partial: "bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100",
     external: "bg-amber-50 border-amber-200 text-amber-800",
     internal: "bg-indigo-50 border-indigo-200 text-indigo-800",
     maintenance: "bg-rose-50 border-rose-200 text-rose-800",
@@ -58,7 +66,7 @@ export function AvailabilityCalendar({ events = [], onSelectDate, selectedDate, 
   };
 
   return (
-    <div data-testid="availability-calendar" className="bg-white rounded-2xl border border-slate-200 p-5">
+    <div data-testid="availability-calendar" className="bg-white rounded-[14px] border border-slate-200 p-5">
       <div className="flex items-center justify-between mb-4">
         <button data-testid="cal-prev" onClick={() => move(-1)} className="p-2 rounded-lg hover:bg-slate-100"><ChevronLeft className="w-5 h-5" /></button>
         <h4 className="font-heading font-semibold text-slate-900">{MONTHS[cursor.m]} {cursor.y}</h4>
@@ -73,8 +81,25 @@ export function AvailabilityCalendar({ events = [], onSelectDate, selectedDate, 
           const dstr = ymd(cursor.y, cursor.m, d);
           const isPast = dstr < todayStr;
           const st = stateFor(dstr);
-          const selectable = onSelectDate && st === "available" && !isPast;
+          const selectable = onSelectDate && (st === "available" || st === "partial") && !isPast;
           const isSel = selectedDate === dstr;
+          if (publicView) {
+            // Gaya date picker (acuan Airbnb): sel bulat, terpilih = isi gelap, titik penanda status.
+            return (
+              <button key={i} disabled={!selectable} data-testid={`cal-day-${dstr}`} aria-pressed={isSel}
+                aria-label={`${d} ${MONTHS[cursor.m]}${st === "partial" ? ", sebagian terpakai" : st === "maintenance" ? ", pemeliharaan" : ""}`}
+                onClick={() => selectable && onSelectDate(dstr)}
+                className="h-11 flex items-center justify-center">
+                <span className={`relative w-10 h-10 rounded-full flex items-center justify-center text-sm transition-colors
+                  ${isSel ? "bg-slate-900 text-white font-semibold" : isPast || !selectable ? "text-slate-300 line-through decoration-slate-300" : "text-slate-900 font-medium hover:border hover:border-slate-900"}`}>
+                  {d}
+                  {!isPast && st !== "available" && (
+                    <span className={`absolute bottom-1 w-1 h-1 rounded-full ${st === "maintenance" ? "bg-rose-500" : isSel ? "bg-amber-300" : "bg-amber-500"}`} />
+                  )}
+                </span>
+              </button>
+            );
+          }
           return (
             <button key={i} disabled={!selectable}
               data-testid={`cal-day-${dstr}`}
@@ -89,10 +114,13 @@ export function AvailabilityCalendar({ events = [], onSelectDate, selectedDate, 
         })}
       </div>
       <div className="flex flex-wrap items-center gap-4 text-xs font-medium pt-4 mt-4 border-t border-slate-100">
-        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-emerald-400" /> Tersedia</span>
         {publicView
-          ? <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-amber-400" /> Tidak Tersedia</span>
+          ? <>
+              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full border border-slate-900" /> Tersedia</span>
+              <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-amber-500" /> Sebagian terpakai</span>
+            </>
           : <>
+              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-emerald-400" /> Tersedia</span>
               <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-indigo-400" /> Internal</span>
               <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-amber-400" /> Eksternal</span>
             </>}

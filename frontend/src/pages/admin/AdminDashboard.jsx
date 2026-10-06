@@ -1,15 +1,9 @@
 import { useEffect, useState } from "react";
-import { Building2, CalendarCheck, Inbox, CheckCircle2, Wrench, TrendingUp } from "lucide-react";
+import { Building2, CalendarCheck, Inbox, Wrench, LayoutGrid, Hourglass } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { Link } from "react-router-dom";
-import { api } from "@/lib/api";
-
-const STATUS_STYLE = {
-  request: "bg-sky-100 text-sky-700", review: "bg-sky-100 text-sky-700",
-  revision: "bg-amber-100 text-amber-700", rejected: "bg-rose-100 text-rose-700",
-  approved: "bg-emerald-100 text-emerald-700", confirmed: "bg-emerald-100 text-emerald-800",
-  completed: "bg-slate-100 text-slate-600", cancelled: "bg-slate-100 text-slate-500",
-};
+import { api, formatDateId } from "@/lib/api";
+import { INQUIRY_STYLE } from "@/pages/admin/AdminRequests";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
@@ -17,12 +11,12 @@ export default function AdminDashboard() {
   if (!stats) return <p className="text-slate-400">Memuat dashboard...</p>;
 
   const kpis = [
-    { label: "Total Fasilitas", value: stats.total_all_facilities, Icon: Building2, color: "bg-amber-500" },
-    { label: "Tersedia Hari Ini", value: stats.available_today, Icon: CheckCircle2, color: "bg-emerald-500" },
-    { label: "Permintaan Baru", value: stats.new_requests, Icon: Inbox, color: "bg-sky-500" },
+    { label: "Total Gedung", value: stats.total_all_facilities, Icon: Building2, color: "bg-amber-500" },
+    { label: "Ruang / Unit Aktif", value: stats.total_spaces, Icon: LayoutGrid, color: "bg-slate-700" },
+    { label: "Inquiry Baru", value: stats.new_requests, Icon: Inbox, color: "bg-sky-500" },
+    { label: "Menunggu Konfirmasi", value: stats.pending_confirmation, Icon: Hourglass, color: "bg-amber-600" },
     { label: "Booking Terkonfirmasi", value: stats.confirmed_bookings, Icon: CalendarCheck, color: "bg-indigo-500" },
-    { label: "Dalam Perbaikan", value: stats.maintenance, Icon: Wrench, color: "bg-rose-500" },
-    { label: "Internal Hari Ini", value: stats.internal_today, Icon: TrendingUp, color: "bg-slate-700" },
+    { label: "Jadwal Pemeliharaan", value: stats.maintenance, Icon: Wrench, color: "bg-rose-500" },
   ];
   const pieData = [
     { name: "Internal", value: stats.utilization.internal, color: "#6366F1" },
@@ -34,7 +28,7 @@ export default function AdminDashboard() {
     <div className="space-y-8">
       <div>
         <h1 className="font-heading text-2xl font-bold text-slate-900">Dashboard</h1>
-        <p className="text-slate-500 text-sm mt-1">Ringkasan pengelolaan fasilitas UNIB ONE.</p>
+        <p className="text-slate-500 text-sm mt-1">Ringkasan pengelolaan fasilitas BPU UNIB.</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
@@ -77,24 +71,24 @@ export default function AdminDashboard() {
 
       <div className="bg-white rounded-2xl border border-slate-200 p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-heading font-semibold text-slate-900">Permintaan Terbaru</h3>
+          <h3 className="font-heading font-semibold text-slate-900">Inquiry Terbaru</h3>
           <Link to="/admin/requests" className="text-sm font-semibold text-amber-600 hover:text-amber-700">Lihat Semua</Link>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead><tr className="text-left text-slate-400 border-b border-slate-100">
-              <th className="pb-3 font-medium">Request ID</th><th className="pb-3 font-medium">Fasilitas</th><th className="pb-3 font-medium">Pemohon</th><th className="pb-3 font-medium">Tanggal</th><th className="pb-3 font-medium">Status</th>
+              <th className="pb-3 font-medium">Inquiry ID</th><th className="pb-3 font-medium">Gedung / Ruang</th><th className="pb-3 font-medium">Pemohon</th><th className="pb-3 font-medium">Tanggal</th><th className="pb-3 font-medium">Status</th>
             </tr></thead>
             <tbody>
               {stats.recent_requests.length === 0 ? (
-                <tr><td colSpan={5} className="py-8 text-center text-slate-400">Belum ada permintaan.</td></tr>
+                <tr><td colSpan={5} className="py-8 text-center text-slate-400">Belum ada inquiry.</td></tr>
               ) : stats.recent_requests.map((r) => (
                 <tr key={r.id} className="border-b border-slate-50">
-                  <td className="py-3 font-mono text-amber-600 font-semibold">{r.request_id}</td>
-                  <td className="py-3 text-slate-700">{r.facility_name}</td>
+                  <td className="py-3 font-mono text-amber-600 font-semibold">{r.inquiry_code}</td>
+                  <td className="py-3 text-slate-700">{r.building_name} <span className="text-xs text-slate-400">· {r.space_code}</span></td>
                   <td className="py-3 text-slate-600">{r.name}</td>
-                  <td className="py-3 text-slate-600">{r.date}</td>
-                  <td className="py-3"><span className={`px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${STATUS_STYLE[r.status] || STATUS_STYLE.request}`}>{r.status}</span></td>
+                  <td className="py-3 text-slate-600">{formatDateId(r.date)}</td>
+                  <td className="py-3"><span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${INQUIRY_STYLE[r.status] || ""}`}>{r.status_label}</span></td>
                 </tr>
               ))}
             </tbody>

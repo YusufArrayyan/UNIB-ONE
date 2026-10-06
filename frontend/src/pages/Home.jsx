@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { Search, ArrowRight, Building2, DoorOpen, Theater, Trophy, FlaskConical, Home as HomeIcon, LayoutGrid, GraduationCap, PartyPopper, Award, Users2, Dumbbell, Sparkles, MapPin } from "lucide-react";
 import { api } from "@/lib/api";
 import { FacilityCard } from "@/components/FacilityCard";
+import { HeroSlider } from "@/components/HeroSlider";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 const CATS = [
   { key: "Gedung", label: "Gedung", Icon: Building2 },
@@ -24,31 +26,32 @@ const PURPOSES = [
   { label: "Event Eksternal", desc: "Untuk masyarakat & instansi", Icon: Sparkles },
 ];
 
-const STATS = [
-  { n: "6+", l: "Fasilitas Kampus" },
-  { n: "2", l: "Jalur Pemanfaatan" },
-  { n: "24/7", l: "Akses Informasi" },
-  { n: "100%", l: "Terintegrasi" },
-];
-
 export default function Home() {
   const [featured, setFeatured] = useState([]);
   const [stories, setStories] = useState([]);
+  const [counts, setCounts] = useState(null);
   const [q, setQ] = useState("");
   const nav = useNavigate();
+  const cfg = useSiteConfig();
 
   useEffect(() => {
     api.get("/facilities", { params: { featured: true } }).then((r) => setFeatured(r.data.slice(0, 4)));
     api.get("/content").then((r) => setStories(r.data.slice(0, 4)));
+    api.get("/stats/public").then((r) => setCounts(r.data)).catch(() => {});
   }, []);
+
+  const stats = [
+    { n: counts ? `${counts.buildings}` : "…", l: "Gedung & Fasilitas" },
+    { n: counts ? `${counts.spaces}` : "…", l: "Ruang / Unit" },
+    { n: "24/7", l: "Cek Ketersediaan" },
+    { n: "1 Klik", l: "Ajukan via WhatsApp" },
+  ];
 
   return (
     <div>
       {/* HERO */}
-      <section className="relative overflow-hidden text-white">
-        <img src="/facilities/gsg-1.jpeg" alt="Kampus UNIB" className="absolute inset-0 w-full h-full object-cover" />
-        <div className="absolute inset-0 hero-overlay" />
-        <div className="container-unib relative py-20 lg:py-28">
+      <HeroSlider slides={cfg.hero_slides || []}>
+        <div className="container-unib relative pt-20 pb-12 lg:pt-28 lg:pb-16">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-wide uppercase bg-white/10 border border-white/20 px-3 py-1.5 rounded-full">
               <MapPin className="w-3.5 h-3.5 text-amber-400" /> Universitas Bengkulu
@@ -57,7 +60,7 @@ export default function Home() {
               Lebih dari Sekadar Fasilitas. <span className="text-gradient-gold">Kampusmu, Terhubung.</span>
             </h1>
             <p className="mt-5 text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
-              Temukan ruang, fasilitas, dan layanan di seluruh Universitas Bengkulu — cek ketersediaan dan ajukan pemanfaatan, semua dalam satu ekosistem digital terpadu.
+              Temukan gedung dan ruang di seluruh Universitas Bengkulu. Cek ketersediaan per ruang, lihat kisaran tarif, lalu ajukan permintaan langsung ke WhatsApp BPU.
             </p>
 
             <form onSubmit={(e) => { e.preventDefault(); nav(`/explore?q=${encodeURIComponent(q)}`); }}
@@ -75,19 +78,19 @@ export default function Home() {
 
             <div className="mt-4 flex flex-wrap gap-2 items-center text-sm text-slate-300">
               <span>Populer:</span>
-              {["Gedung Serba Guna", "Laboratorium Terpadu", "Asrama Orchid", "Aula FMIPA"].map((p) => (
-                <button key={p} onClick={() => nav(`/explore?q=${encodeURIComponent(p)}`)}
-                  className="bg-white/10 hover:bg-amber-500 hover:text-slate-950 border border-white/15 px-3 py-1 rounded-full text-xs font-medium transition-colors">{p}</button>
+              {featured.map((f) => (
+                <button key={f.id} onClick={() => nav(`/facility/${f.slug}`)}
+                  className="bg-white/10 hover:bg-amber-500 hover:text-slate-950 border border-white/15 px-3 py-1 rounded-full text-xs font-medium transition-colors">{f.name}</button>
               ))}
             </div>
           </motion.div>
         </div>
-      </section>
+      </HeroSlider>
 
       {/* STATS */}
       <section className="bg-slate-900 text-white border-t border-slate-800">
         <div className="container-unib grid grid-cols-2 lg:grid-cols-4 divide-x divide-slate-800">
-          {STATS.map((s) => (
+          {stats.map((s) => (
             <div key={s.l} className="py-8 text-center">
               <div className="font-heading text-3xl lg:text-4xl font-extrabold text-amber-400">{s.n}</div>
               <div className="text-xs sm:text-sm text-slate-400 mt-1">{s.l}</div>
@@ -184,10 +187,10 @@ export default function Home() {
       <section className="container-unib py-16">
         <div className="rounded-3xl bg-gradient-to-br from-amber-500 to-amber-600 p-10 lg:p-14 text-center text-slate-950">
           <h2 className="font-heading text-3xl lg:text-4xl font-extrabold">Butuh Menggunakan Fasilitas?</h2>
-          <p className="mt-3 max-w-2xl mx-auto font-medium">Ceritakan kebutuhan Anda. Tim BPU siap membantu menemukan ruang yang tepat dan menyelesaikan proses pemanfaatan.</p>
+          <p className="mt-3 max-w-2xl mx-auto font-medium">Pilih gedung dan ruang, cek ketersediaan, lalu ajukan via WhatsApp. Tim BPU akan mengonfirmasi tarif final dan persyaratan.</p>
           <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
-            <Link to="/request" className="bg-slate-950 text-white font-semibold px-7 py-3.5 rounded-xl hover:bg-slate-800 transition-colors">Ajukan Permohonan</Link>
-            <Link to="/explore" className="bg-white/30 backdrop-blur border border-slate-950/10 text-slate-950 font-semibold px-7 py-3.5 rounded-xl hover:bg-white/50 transition-colors">Jelajahi Fasilitas</Link>
+            <Link to="/explore" className="bg-slate-950 text-white font-semibold px-7 py-3.5 rounded-xl hover:bg-slate-800 transition-colors">Lihat Fasilitas</Link>
+            <Link to="/track" className="bg-white/30 backdrop-blur border border-slate-950/10 text-slate-950 font-semibold px-7 py-3.5 rounded-xl hover:bg-white/50 transition-colors">Lacak Inquiry</Link>
           </div>
         </div>
       </section>

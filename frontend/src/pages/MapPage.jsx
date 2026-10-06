@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Search, Users, ArrowRight, X } from "lucide-react";
-import { api, CATEGORY_META } from "@/lib/api";
+import { api, CATEGORY_META, mediaSrc } from "@/lib/api";
 import { FacilityMap } from "@/components/FacilityMap";
+import { capacityText } from "@/components/FacilityCard";
+import { MediaFallback } from "@/components/BrandLogo";
 
 const CATS = ["Semua", "Gedung", "Ruang", "Aula", "Lapangan", "Laboratorium", "Hunian", "Lainnya"];
 
@@ -47,13 +49,14 @@ export default function MapPage() {
           {selected && (
             <div data-testid="map-preview-card" className="absolute bottom-4 left-4 right-4 sm:right-auto sm:w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-fade-up">
               <button onClick={() => setSelected(null)} className="absolute top-2 right-2 z-10 bg-white/90 rounded-full p-1.5 shadow"><X className="w-4 h-4" /></button>
-              <img src={selected.images?.[0]} alt={selected.name} className="w-full h-32 object-cover" />
+              <div className="w-full h-32">{selected.images?.[0] ? <img src={mediaSrc(selected.images[0])} alt={selected.name} className="w-full h-full object-cover" /> : <MediaFallback />}</div>
               <div className="p-4">
                 <span className="text-xs font-semibold text-white px-2 py-0.5 rounded-full" style={{ background: (CATEGORY_META[selected.category] || CATEGORY_META.Lainnya).color }}>{selected.category}</span>
                 <h4 className="font-heading font-bold text-slate-900 mt-2">{selected.name}</h4>
-                <p className="text-sm text-slate-500 flex items-center gap-1 mt-1"><Users className="w-4 h-4" /> {selected.capacity} orang</p>
+                <p className="text-sm text-slate-500 flex items-center gap-1 mt-1"><Users className="w-4 h-4" /> {capacityText(selected)}</p>
+                <p className="text-sm font-semibold text-slate-900 mt-1">{selected.price_summary?.text}</p>
                 <Link to={`/facility/${selected.slug}`} className="mt-3 w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold py-2.5 rounded-lg flex items-center justify-center gap-1 text-sm transition-colors">
-                  Detail Fasilitas <ArrowRight className="w-4 h-4" />
+                  Lihat Fasilitas <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>
@@ -66,11 +69,11 @@ export default function MapPage() {
             {filtered.map((f) => (
               <button key={f.id} onClick={() => setSelected(f)}
                 className={`w-full flex gap-3 p-3 rounded-xl border text-left transition-all ${selected?.id === f.id ? "border-amber-500 bg-amber-50" : "border-slate-200 bg-white hover:border-amber-300"}`}>
-                <img src={f.images?.[0]} alt={f.name} className="w-16 h-16 rounded-lg object-cover shrink-0" />
+                <span className="w-16 h-16 rounded-lg overflow-hidden shrink-0">{f.images?.[0] ? <img src={mediaSrc(f.images[0])} alt={f.name} className="w-full h-full object-cover" /> : <MediaFallback />}</span>
                 <div className="min-w-0">
                   <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full text-white" style={{ background: (CATEGORY_META[f.category] || CATEGORY_META.Lainnya).color }}>{f.category}</span>
                   <p className="font-heading font-semibold text-sm text-slate-900 mt-1 truncate">{f.name}</p>
-                  <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5"><Users className="w-3 h-3" /> {f.capacity} org</p>
+                  <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5"><Users className="w-3 h-3" /> {capacityText(f)}</p>
                 </div>
               </button>
             ))}

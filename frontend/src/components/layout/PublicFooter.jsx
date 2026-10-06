@@ -1,19 +1,21 @@
 import { Link } from "react-router-dom";
-import { Building2, Mail, Phone, MapPin, Instagram, Facebook, Twitter } from "lucide-react";
+import { Mail, Phone, MapPin, Instagram, Facebook, Twitter, MessageCircle } from "lucide-react";
+import { BrandLogo } from "@/components/BrandLogo";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
+import { buildWaLink } from "@/lib/api";
 
 export function PublicFooter() {
+  const cfg = useSiteConfig();
   return (
     <footer className="bg-slate-950 text-slate-400 border-t border-slate-800">
       <div className="container-unib py-14 grid grid-cols-1 md:grid-cols-4 gap-10">
         <div>
           <Link to="/" className="flex items-center gap-2.5 text-white">
-            <span className="w-9 h-9 rounded-lg bg-amber-500 flex items-center justify-center">
-              <Building2 className="w-5 h-5 text-slate-950" />
-            </span>
-            <span className="font-heading font-extrabold text-lg">UNIB ONE</span>
+            <BrandLogo />
+            <span className="font-heading font-extrabold text-lg">BPU UNIB</span>
           </Link>
           <p className="mt-4 text-sm leading-relaxed">
-            One Integrated University Facility System. Satu fasilitas, satu data, satu kalender.
+            Badan Pengelola Usaha Universitas Bengkulu. Informasi, ketersediaan, dan pengajuan penyewaan fasilitas kampus.
           </p>
           <div className="flex gap-3 mt-5">
             {[Instagram, Facebook, Twitter].map((Icon, i) => (
@@ -36,22 +38,26 @@ export function PublicFooter() {
         <div>
           <h4 className="text-white font-heading font-semibold mb-4">Kontak BPU</h4>
           <ul className="space-y-2.5 text-sm">
-            <li className="flex items-start gap-2"><MapPin className="w-4 h-4 mt-0.5 shrink-0" /> Jl. WR. Supratman, Kandang Limun, Kota Bengkulu</li>
-            <li className="flex items-center gap-2"><Phone className="w-4 h-4" /> +62 821-8502-8768</li>
-            <li className="flex items-center gap-2"><Mail className="w-4 h-4" /> bpu@unib.ac.id</li>
+            <li className="flex items-start gap-2"><MapPin className="w-4 h-4 mt-0.5 shrink-0" /> {cfg.address}</li>
+            <li className="flex items-center gap-2"><Phone className="w-4 h-4" /> {cfg.contact_phone || `+${cfg.whatsapp_bpu}`}</li>
+            <li className="flex items-center gap-2"><Mail className="w-4 h-4" /> {cfg.contact_email}</li>
+            <li>
+              <a href={buildWaLink(cfg.whatsapp_bpu, "Halo Admin BPU UNIB, saya ingin bertanya mengenai penyewaan fasilitas kampus.")} target="_blank" rel="noreferrer"
+                className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-medium"><MessageCircle className="w-4 h-4" /> Chat WhatsApp BPU</a>
+            </li>
           </ul>
         </div>
         <div>
           <h4 className="text-white font-heading font-semibold mb-4">Newsletter</h4>
           <p className="text-sm mb-3">Dapatkan info terbaru fasilitas UNIB.</p>
           <form onSubmit={(e) => e.preventDefault()} className="flex gap-2">
-            <input placeholder="Email anda" className="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/40" />
+            <input placeholder="Email anda" aria-label="Email" className="flex-1 min-w-0 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/40" />
             <button className="bg-amber-500 text-slate-950 font-semibold text-sm px-4 rounded-lg hover:bg-amber-600 transition-colors">Kirim</button>
           </form>
         </div>
       </div>
       <div className="border-t border-slate-800 py-5 text-center text-xs text-slate-500">
-        © 2026 UNIB ONE - Universitas Bengkulu. One Campus, One Access, One Ecosystem.
+        © {new Date().getFullYear()} BPU UNIB, Badan Pengelola Usaha Universitas Bengkulu.
       </div>
     </footer>
   );

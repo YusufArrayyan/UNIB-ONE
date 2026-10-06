@@ -1,7 +1,8 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Menu, X, Search, LayoutDashboard, Building2 } from "lucide-react";
+import { Menu, X, Search, LayoutDashboard } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { BrandLogo } from "@/components/BrandLogo";
 
 const LINKS = [
   { to: "/", label: "Home", end: true },
@@ -28,12 +29,10 @@ export function PublicNav() {
     <header className="bg-slate-900/95 backdrop-blur-md text-white border-b border-slate-800 sticky top-0 z-50">
       <div className="container-unib flex items-center justify-between h-16">
         <Link to="/" data-testid="nav-logo" className="flex items-center gap-2.5 shrink-0">
-          <span className="w-9 h-9 rounded-lg bg-amber-500 flex items-center justify-center">
-            <Building2 className="w-5 h-5 text-slate-950" />
-          </span>
+          <BrandLogo />
           <div className="leading-none">
-            <span className="font-heading font-extrabold text-lg tracking-tight">UNIB ONE</span>
-            <span className="block text-[10px] text-slate-400 font-medium">One Campus, One Access</span>
+            <span className="font-heading font-extrabold text-lg tracking-tight">BPU UNIB</span>
+            <span className="block text-[10px] text-slate-400 font-medium">Badan Pengelola Usaha</span>
           </div>
         </Link>
 

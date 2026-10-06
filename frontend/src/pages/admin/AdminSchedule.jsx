@@ -5,27 +5,31 @@ import { api, formatApiError } from "@/lib/api";
 
 export default function AdminSchedule() {
   const [facilities, setFacilities] = useState([]);
+  const [allSpaces, setAllSpaces] = useState([]);
   const [events, setEvents] = useState([]);
   const [conflict, setConflict] = useState(null);
   const [form, setForm] = useState({
-    facility_id: "", date: "", start_time: "08:00", end_time: "12:00",
+    facility_id: "", space_id: "", date: "", start_time: "08:00", end_time: "12:00",
     source: "internal", purpose: "", unit: "", notes: "",
   });
 
   const load = () => api.get("/availability").then((r) => setEvents(r.data.sort((a, b) => b.date.localeCompare(a.date))));
   useEffect(() => {
     api.get("/facilities").then((r) => { setFacilities(r.data); setForm((f) => ({ ...f, facility_id: r.data[0]?.id || "" })); });
+    api.get("/spaces").then((r) => setAllSpaces(r.data));
     load();
   }, []);
   const set = (k, v) => setForm((s) => ({ ...s, [k]: v }));
 
   const facName = (id) => facilities.find((f) => f.id === id)?.name || "-";
+  const spaceCode = (id) => (id ? allSpaces.find((s) => s.id === id)?.code || "?" : "Seluruh gedung");
+  const buildingSpaces = allSpaces.filter((s) => s.building_id === form.facility_id && s.status === "active");
 
   const submit = async () => {
     setConflict(null);
     if (!form.facility_id || !form.date) { toast.error("Lengkapi fasilitas & tanggal"); return; }
     try {
-      await api.post("/availability", form);
+      await api.post("/availability", { ...form, space_id: form.space_id || null });
       toast.success(form.source === "maintenance" ? "Jadwal pemeliharaan ditambahkan" : "Jadwal berhasil diblokir");
       setForm((f) => ({ ...f, purpose: "", unit: "", notes: "" })); load();
     } catch (e) {
@@ -54,8 +58,13 @@ export default function AdminSchedule() {
                 <option value="maintenance">Pemeliharaan</option>
               </select></div>
             <div><label className="text-sm font-medium text-slate-700">Fasilitas</label>
-              <select data-testid="block-facility" className={inputCls} value={form.facility_id} onChange={(e) => set("facility_id", e.target.value)}>
+              <select data-testid="block-facility" className={inputCls} value={form.facility_id} onChange={(e) => setForm((s) => ({ ...s, facility_id: e.target.value, space_id: "" }))}>
                 {facilities.map((f) => <option key={f.id} value={f.id}>{f.name}</option>)}
+              </select></div>
+            <div><label className="text-sm font-medium text-slate-700">Ruang / Unit</label>
+              <select data-testid="block-space" className={inputCls} value={form.space_id} onChange={(e) => set("space_id", e.target.value)}>
+                <option value="">Seluruh gedung (semua ruang)</option>
+                {buildingSpaces.map((s) => <option key={s.id} value={s.id}>{s.name} ({s.code})</option>)}
               </select></div>
             <div><label className="text-sm font-medium text-slate-700">Tanggal</label><input data-testid="block-date" type="date" className={inputCls} value={form.date} onChange={(e) => set("date", e.target.value)} /></div>
             <div className="grid grid-cols-2 gap-3">
@@ -74,7 +83,7 @@ export default function AdminSchedule() {
             {conflict && (
               <div className="bg-rose-50 border border-rose-200 rounded-lg p-3 text-sm text-rose-700">
                 <p className="flex items-center gap-1.5 font-semibold"><AlertTriangle className="w-4 h-4" /> Jadwal Bentrok</p>
-                {conflict.map((c) => <p key={c.id} className="mt-1 text-xs">{c.date} {c.start_time}-{c.end_time} ({c.source})</p>)}
+                {conflict.map((c) => <p key={c.id} className="mt-1 text-xs">{c.date} {c.start_time}-{c.end_time} · {spaceCode(c.space_id)} ({c.source})</p>)}
               </div>
             )}
 
@@ -89,16 +98,17 @@ export default function AdminSchedule() {
           <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
             <table className="w-full text-sm">
               <thead className="sticky top-0 bg-white"><tr className="text-left text-slate-400 border-b border-slate-100">
-                <th className="p-4 font-medium">Fasilitas</th><th className="p-4 font-medium">Tanggal</th><th className="p-4 font-medium">Waktu</th><th className="p-4 font-medium">Jenis</th><th className="p-4 font-medium">Keterangan</th><th className="p-4"></th>
+                <th className="p-4 font-medium">Fasilitas</th><th className="p-4 font-medium">Ruang</th><th className="p-4 font-medium">Tanggal</th><th className="p-4 font-medium">Waktu</th><th className="p-4 font-medium">Jenis</th><th className="p-4 font-medium">Keterangan</th><th className="p-4"></th>
               </tr></thead>
               <tbody>
-                {events.length === 0 ? <tr><td colSpan={6} className="py-10 text-center text-slate-400">Belum ada jadwal terblokir.</td></tr> : events.map((e) => (
+                {events.length === 0 ? <tr><td colSpan={7} className="py-10 text-center text-slate-400">Belum ada jadwal terblokir.</td></tr> : events.map((e) => (
                   <tr key={e.id} className="border-b border-slate-50">
                     <td className="p-4 text-slate-700">{facName(e.facility_id)}</td>
+                    <td className="p-4 text-slate-600 font-mono text-xs">{spaceCode(e.space_id)}</td>
                     <td className="p-4 text-slate-600">{e.date}</td>
-                    <td className="p-4 text-slate-600">{e.start_time}-{e.end_time}</td>
+                    <td className="p-4 text-slate-600 whitespace-nowrap">{e.start_time} s.d. {e.end_time}</td>
                     <td className="p-4"><span className={`px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${SRC_STYLE[e.source]}`}>{e.source}</span></td>
-                    <td className="p-4 text-slate-500 text-xs">{e.purpose || e.notes || "-"}{e.unit && <span className="block">{e.unit}</span>}</td>
+                    <td className="p-4 text-slate-500 text-xs">{e.purpose || e.notes || "Tanpa keterangan"}{e.unit && <span className="block">{e.unit}</span>}</td>
                     <td className="p-4"><button onClick={() => del(e.id)} className="text-rose-500 hover:text-rose-700"><Trash2 className="w-4 h-4" /></button></td>
                   </tr>
                 ))}

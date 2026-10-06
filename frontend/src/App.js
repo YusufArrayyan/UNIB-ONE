@@ -25,6 +25,9 @@ import AdminContent from "@/pages/admin/AdminContent";
 import AdminSchedule from "@/pages/admin/AdminSchedule";
 import AdminAvailability from "@/pages/admin/AdminAvailability";
 import AdminUsers from "@/pages/admin/AdminUsers";
+import AdminAmenities from "@/pages/admin/AdminAmenities";
+import AdminBookings from "@/pages/admin/AdminBookings";
+import AdminSettings from "@/pages/admin/AdminSettings";
 
 function App() {
   return (
@@ -55,6 +58,9 @@ function App() {
             <Route path="schedule" element={<AdminSchedule />} />
             <Route path="availability" element={<AdminAvailability />} />
             <Route path="users" element={<AdminUsers />} />
+            <Route path="amenities" element={<AdminAmenities />} />
+            <Route path="bookings" element={<AdminBookings />} />
+            <Route path="settings" element={<AdminSettings />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus, X, Check, Minus, Users } from "lucide-react";
-import { api } from "@/lib/api";
+import { api, mediaSrc } from "@/lib/api";
+import { capacityText } from "@/components/FacilityCard";
+import { MediaFallback } from "@/components/BrandLogo";
 
 const ROWS = [
-  { key: "capacity", label: "Kapasitas", render: (f) => `${f.capacity} orang` },
-  { key: "area", label: "Luas", render: (f) => f.area || "-" },
+  { key: "price", label: "Tarif", render: (f) => f.price_summary?.text || "Dikonfirmasi BPU" },
+  { key: "capacity", label: "Kapasitas", render: (f) => capacityText(f) },
+  { key: "spaces", label: "Ruang / Unit", render: (f) => (f.space_count ? `${f.space_count} unit` : "1 unit") },
+  { key: "area", label: "Luas", render: (f) => f.area || "Belum ada data" },
   { key: "operating_hours", label: "Jam Operasional", render: (f) => f.operating_hours },
   { key: "location", label: "Lokasi", render: (f) => f.location },
 ];
@@ -37,10 +41,10 @@ export default function Compare() {
           {selected.map((f) => (
             <div key={f.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden relative">
               <button onClick={() => remove(f.id)} className="absolute top-2 right-2 z-10 bg-white/90 rounded-full p-1 shadow"><X className="w-4 h-4" /></button>
-              <img src={f.images?.[0]} alt={f.name} className="w-full h-28 object-cover" />
+              <div className="w-full h-28">{f.images?.[0] ? <img src={mediaSrc(f.images[0])} alt={f.name} className="w-full h-full object-cover" /> : <MediaFallback />}</div>
               <div className="p-3">
                 <p className="font-heading font-semibold text-sm text-slate-900 line-clamp-2">{f.name}</p>
-                <p className="text-xs text-slate-500 flex items-center gap-1 mt-1"><Users className="w-3 h-3" /> {f.capacity} org</p>
+                <p className="text-xs text-slate-500 flex items-center gap-1 mt-1"><Users className="w-3 h-3" /> {capacityText(f)}</p>
               </div>
             </div>
           ))}
@@ -76,7 +80,7 @@ export default function Compare() {
                   <td className="p-4" />
                   {selected.map((f) => (
                     <td key={f.id} className="p-4">
-                      <Link to={`/facility/${f.slug}`} className="inline-flex items-center justify-center bg-amber-500 hover:bg-amber-600 text-slate-950 text-sm font-semibold px-4 py-2 rounded-lg transition-colors">Pilih & Ajukan</Link>
+                      <Link to={`/facility/${f.slug}`} className="inline-flex items-center justify-center bg-amber-500 hover:bg-amber-600 text-slate-950 text-sm font-semibold px-4 py-2 rounded-lg transition-colors">Lihat Fasilitas</Link>
                     </td>
                   ))}
                 </tr>
@@ -92,8 +96,8 @@ export default function Compare() {
               <div className="space-y-2">
                 {facilities.filter((f) => !selected.find((s) => s.id === f.id)).map((f) => (
                   <button key={f.id} onClick={() => add(f)} className="w-full flex gap-3 p-3 rounded-xl border border-slate-200 hover:border-amber-400 text-left">
-                    <img src={f.images?.[0]} alt={f.name} className="w-14 h-14 rounded-lg object-cover" />
-                    <div><p className="font-semibold text-sm text-slate-900">{f.name}</p><p className="text-xs text-slate-500">{f.category} · {f.capacity} org</p></div>
+                    <span className="w-14 h-14 rounded-lg overflow-hidden shrink-0">{f.images?.[0] ? <img src={mediaSrc(f.images[0])} alt={f.name} className="w-full h-full object-cover" /> : <MediaFallback />}</span>
+                    <div><p className="font-semibold text-sm text-slate-900">{f.name}</p><p className="text-xs text-slate-500">{f.category} · {f.price_summary?.text}</p></div>
                   </button>
                 ))}
               </div>

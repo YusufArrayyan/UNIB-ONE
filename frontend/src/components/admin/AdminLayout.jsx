@@ -1,14 +1,18 @@
 import { NavLink, Outlet, useNavigate, Navigate } from "react-router-dom";
-import { LayoutDashboard, Building2, CalendarRange, Inbox, FileText, Users, LogOut, CalendarClock, ShieldBan, ExternalLink } from "lucide-react";
+import { LayoutDashboard, Building2, CalendarRange, Inbox, FileText, Users, LogOut, CalendarClock, ExternalLink, PackagePlus, CalendarCheck, Settings } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { BrandLogo } from "@/components/BrandLogo";
 
 const NAV = [
   { to: "/admin", label: "Dashboard", Icon: LayoutDashboard, end: true, roles: ["super_admin", "admin_bpu", "admin_internal"] },
-  { to: "/admin/facilities", label: "Fasilitas", Icon: Building2, roles: ["super_admin", "admin_bpu"] },
-  { to: "/admin/requests", label: "External Requests", Icon: Inbox, roles: ["super_admin", "admin_bpu"] },
+  { to: "/admin/facilities", label: "Gedung & Ruang", Icon: Building2, roles: ["super_admin", "admin_bpu"] },
+  { to: "/admin/amenities", label: "Fasilitas Tambahan", Icon: PackagePlus, roles: ["super_admin", "admin_bpu"] },
+  { to: "/admin/requests", label: "Inquiry", Icon: Inbox, roles: ["super_admin", "admin_bpu"] },
+  { to: "/admin/bookings", label: "Booking", Icon: CalendarCheck, roles: ["super_admin", "admin_bpu"] },
   { to: "/admin/content", label: "Content & Stories", Icon: FileText, roles: ["super_admin", "admin_bpu"] },
   { to: "/admin/schedule", label: "Internal & Block Schedule", Icon: CalendarClock, roles: ["super_admin", "admin_internal", "admin_bpu"] },
   { to: "/admin/availability", label: "Kalender Fasilitas", Icon: CalendarRange, roles: ["super_admin", "admin_internal", "admin_bpu"] },
+  { to: "/admin/settings", label: "Pengaturan", Icon: Settings, roles: ["super_admin", "admin_bpu"] },
   { to: "/admin/users", label: "Users & Roles", Icon: Users, roles: ["super_admin"] },
 ];
 
@@ -28,8 +32,8 @@ export function AdminLayout() {
       <aside className="w-64 bg-slate-900 text-slate-300 flex flex-col h-screen fixed left-0 top-0 border-r border-slate-800 z-40">
         <div className="p-5 border-b border-slate-800">
           <div className="flex items-center gap-2.5 text-white">
-            <span className="w-9 h-9 rounded-lg bg-amber-500 flex items-center justify-center"><Building2 className="w-5 h-5 text-slate-950" /></span>
-            <div className="leading-none"><span className="font-heading font-extrabold">UNIB ONE</span><span className="block text-[10px] text-slate-400 mt-0.5">Admin Panel</span></div>
+            <BrandLogo size="sm" />
+            <div className="leading-none"><span className="font-heading font-extrabold">BPU UNIB</span><span className="block text-[10px] text-slate-400 mt-0.5">Admin Panel</span></div>
           </div>
         </div>
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1 no-scrollbar">
@@ -49,7 +53,7 @@ export function AdminLayout() {
       <div>
         <header className="bg-white border-b border-slate-200 sticky top-0 z-30">
           <div className="px-5 lg:px-8 h-16 flex items-center justify-between">
-            <div className="lg:hidden font-heading font-bold text-slate-900">UNIB ONE</div>
+            <div className="lg:hidden font-heading font-bold text-slate-900">BPU UNIB</div>
             <p className="hidden lg:block text-sm text-slate-500">{new Date().toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</p>
             <div className="flex items-center gap-3">
               <div className="text-right"><p className="text-sm font-semibold text-slate-900 leading-none">{user.name}</p><p className="text-xs text-slate-500 mt-1">{ROLE_LABEL[user.role] || user.role}</p></div>

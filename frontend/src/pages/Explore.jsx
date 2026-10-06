@@ -51,7 +51,7 @@ export default function Explore() {
 
   const allFeatures = useMemo(() => {
     const set = new Set();
-    facilities.forEach((f) => (f.features || []).forEach((x) => set.add(x)));
+    facilities.forEach((f) => (f.features || []).filter((x) => x.length <= 24).forEach((x) => set.add(x)));
     return [...set];
   }, [facilities]);
 

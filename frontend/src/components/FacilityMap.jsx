@@ -1,6 +1,7 @@
 import { APIProvider, Map, AdvancedMarker } from "@vis.gl/react-google-maps";
 import { CATEGORY_META } from "@/lib/api";
 import { MapPin } from "lucide-react";
+import { OsmMap } from "@/components/OsmMap";
 
 const UNIB_CENTER = { lat: -3.7588, lng: 102.2716 };
 const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -23,11 +24,8 @@ function Pin({ color }) {
  */
 export function FacilityMap({ facilities = [], onSelect, center, zoom = 15, height = "100%", selectedId }) {
   if (!API_KEY || API_KEY === "YOUR_GOOGLE_MAPS_API_KEY") {
-    return (
-      <div className="w-full h-full min-h-[300px] flex items-center justify-center bg-slate-100 rounded-2xl text-slate-500 text-sm">
-        Google Maps API key belum dikonfigurasi.
-      </div>
-    );
+    // Tanpa Google Maps API key: gunakan OpenStreetMap (gratis, tanpa key).
+    return <OsmMap facilities={facilities} onSelect={onSelect} center={center} zoom={zoom} height={height} selectedId={selectedId} />;
   }
   return (
     <APIProvider apiKey={API_KEY}>

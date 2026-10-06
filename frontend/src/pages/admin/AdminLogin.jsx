@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Navigate, Link } from "react-router-dom";
-import { Building2, Lock, Mail } from "lucide-react";
+import { Lock, Mail } from "lucide-react";
+import { BrandLogo } from "@/components/BrandLogo";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import { formatApiError } from "@/lib/api";
@@ -34,8 +35,8 @@ export default function AdminLogin() {
     <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <Link to="/" className="flex items-center justify-center gap-2.5 text-white mb-8">
-          <span className="w-10 h-10 rounded-lg bg-amber-500 flex items-center justify-center"><Building2 className="w-6 h-6 text-slate-950" /></span>
-          <span className="font-heading font-extrabold text-2xl">UNIB ONE</span>
+          <BrandLogo size="lg" />
+          <span className="font-heading font-extrabold text-2xl">BPU UNIB</span>
         </Link>
         <div className="bg-white rounded-2xl p-8 shadow-2xl">
           <h1 className="font-heading text-2xl font-bold text-slate-900">Admin Login</h1>

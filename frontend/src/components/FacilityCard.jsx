@@ -1,46 +1,48 @@
 import { Link } from "react-router-dom";
-import { Users, MapPin, ArrowRight } from "lucide-react";
-import { StatusBadge } from "@/components/StatusBadge";
+import { mediaSrc } from "@/lib/api";
+import { MapPin } from "lucide-react";
+import { MediaFallback } from "@/components/BrandLogo";
 
-export function FacilityCard({ facility, status = "available" }) {
-  const img = facility.images?.[0] || "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=520&fit=crop";
+export function capacityText(f) {
+  if (f.capacity_label) return f.capacity_label;
+  if (f.capacity) return `Hingga ${f.capacity} orang`;
+  return "Kapasitas dikonfirmasi BPU";
+}
+
+/** Kartu fasilitas berfokus foto (acuan: Airbnb property-card). */
+export function FacilityCard({ facility }) {
+  const img = facility.images?.[0];
+  const price = facility.price_summary;
+  const confirm = !price || price.mode === "confirm";
+  const priceValue = price?.text?.replace(/^Mulai dari /, "");
+  const units = facility.space_count || 0;
   return (
-    <Link
-      to={`/facility/${facility.slug}`}
-      data-testid={`facility-card-${facility.slug}`}
-      className="group bg-white border border-slate-200 rounded-2xl overflow-hidden card-hover shadow-sm hover:shadow-xl flex flex-col"
-    >
-      <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
-        <img src={img} alt={facility.name} loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-        <span className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-semibold px-3 py-1 rounded-full border border-white/10">
-          {facility.category}
+    <Link to={`/facility/${facility.slug}`} data-testid={`facility-card-${facility.slug}`} className="group flex flex-col">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-[14px] bg-slate-100">
+        {img
+          ? <img src={mediaSrc(img)} alt={facility.name} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+          : <MediaFallback label="Foto segera hadir" />}
+        <span className="absolute top-3 left-3 bg-white text-slate-900 text-[11px] font-semibold px-2.5 py-1 rounded-full shadow-float">
+          {facility.featured ? "Paling sering disewa" : facility.category}
         </span>
-        <div className="absolute top-3 right-3">
-          <StatusBadge status={status} />
-        </div>
-      </div>
-      <div className="p-5 flex-1 flex flex-col justify-between">
-        <div>
-          <h3 className="font-heading font-bold text-lg text-slate-900 leading-snug group-hover:text-amber-600 transition-colors">
-            {facility.name}
-          </h3>
-          <p className="mt-2 text-sm text-slate-500 line-clamp-2">{facility.description}</p>
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {(facility.features || []).slice(0, 4).map((f) => (
-              <span key={f} className="text-[11px] font-medium bg-sky-50 text-sky-700 px-2 py-0.5 rounded-md">{f}</span>
-            ))}
-          </div>
-        </div>
-        <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3">
-          <div className="flex items-center gap-3 text-xs font-medium text-slate-500">
-            <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5" />{facility.capacity} org</span>
-            <span className="flex items-center gap-1 truncate max-w-[120px]"><MapPin className="w-3.5 h-3.5" />{facility.location}</span>
-          </div>
-          <span className="flex items-center gap-1 text-sm font-semibold text-amber-600">
-            Detail <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        {units > 1 && (
+          <span className="absolute bottom-3 left-3 bg-slate-900/75 backdrop-blur text-white text-[11px] font-medium px-2.5 py-1 rounded-full">
+            {units} unit dapat disewa
           </span>
+        )}
+      </div>
+      <div className="pt-3">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="font-heading font-semibold text-[15px] text-slate-900 leading-snug group-hover:underline underline-offset-2">{facility.name}</h3>
+          {facility.code && <span className="text-xs font-mono text-slate-400 shrink-0 mt-0.5">{facility.code}</span>}
         </div>
+        <p className="text-sm text-slate-500 mt-0.5 flex items-center gap-1 truncate"><MapPin className="w-3.5 h-3.5 shrink-0" />{facility.location}</p>
+        <p className="text-sm text-slate-500">{capacityText(facility)}</p>
+        <p className="text-sm text-slate-900 mt-1.5" data-testid="facility-card-price">
+          {confirm
+            ? <span className="font-semibold">Tarif dikonfirmasi BPU</span>
+            : <>{price.mode === "starting" && <span className="text-slate-500">Mulai </span>}<span className="font-semibold">{priceValue}</span></>}
+        </p>
       </div>
     </Link>
   );

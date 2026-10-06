@@ -59,7 +59,7 @@ export default function AdminContent() {
                 <div><label className="text-sm font-medium text-slate-700">Kategori</label><select className={inputCls} value={form.category} onChange={(e) => set("category", e.target.value)}>{CATS.map((c) => <option key={c.k} value={c.k}>{c.l}</option>)}</select></div>
                 <div><label className="text-sm font-medium text-slate-700">Tanggal</label><input type="date" className={inputCls} value={form.date} onChange={(e) => set("date", e.target.value)} /></div>
               </div>
-              <div><label className="text-sm font-medium text-slate-700">Gambar (URL)</label><input className={inputCls} value={form.image} onChange={(e) => set("image", e.target.value)} placeholder="/facilities/gsg-1.jpeg" /></div>
+              <div><label className="text-sm font-medium text-slate-700">Gambar (URL)</label><input className={inputCls} value={form.image} onChange={(e) => set("image", e.target.value)} placeholder="/facilities/gsg/dalam-gsg.jpeg" /></div>
               <div><label className="text-sm font-medium text-slate-700">Ringkasan</label><textarea rows={2} className={inputCls} value={form.excerpt} onChange={(e) => set("excerpt", e.target.value)} /></div>
               <div><label className="text-sm font-medium text-slate-700">Isi</label><textarea rows={5} className={inputCls} value={form.body} onChange={(e) => set("body", e.target.value)} /></div>
               <label className="flex items-center gap-2 text-sm font-medium text-slate-700"><input type="checkbox" checked={form.published} onChange={(e) => set("published", e.target.checked)} className="accent-amber-500 w-4 h-4" /> Publikasikan</label>
